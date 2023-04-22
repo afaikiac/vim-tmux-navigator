@@ -34,6 +34,5 @@ CONFIGURATION                             *tmux-navigator-configuration*
  noremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
  noremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
  noremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
- noremap <silent> {Previous-Mapping} :<C-U><C-U>TmuxNavigatePrevious<cr>
 
  vim:tw=78:ts=8:ft=help:norl:

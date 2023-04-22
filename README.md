@@ -18,7 +18,6 @@ Vim panes and tmux splits seamlessly.
 - `<ctrl-j>` => Down
 - `<ctrl-k>` => Up
 - `<ctrl-l>` => Right
-- `<ctrl-\>` => Previous split
 
 **Note** - you don't need to use your tmux `prefix` key sequence before using
 the mappings.
@@ -38,7 +37,7 @@ install the plugin:
 Add the following line to your `~/.vimrc` file
 
 ``` vim
-Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'afaikiac/vim-tmux-navigator'
 ```
 
 Then run
@@ -50,7 +49,7 @@ Then run
 If you are using Vim 8+, you don't need any plugin manager. Simply clone this repository inside `~/.vim/pack/plugin/start/` directory and restart Vim.
 
 ```
-git clone git@github.com:christoomey/vim-tmux-navigator.git ~/.vim/pack/plugins/start/vim-tmux-navigator
+git clone git@github.com:afaikiac/vim-tmux-navigator.git ~/.vim/pack/plugins/start/vim-tmux-navigator
 ```
 
 
@@ -64,7 +63,7 @@ Add the following to your `~/.tmux.conf` file:
 
 ``` tmux
 # Smart pane switching with awareness of Vim splits.
-# See: https://github.com/christoomey/vim-tmux-navigator
+# See: https://github.com/afaikiac/vim-tmux-navigator
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
 bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
@@ -72,16 +71,11 @@ bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
 bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
 tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
-if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
 
 bind-key -T copy-mode-vi 'C-h' select-pane -L
 bind-key -T copy-mode-vi 'C-j' select-pane -D
 bind-key -T copy-mode-vi 'C-k' select-pane -U
 bind-key -T copy-mode-vi 'C-l' select-pane -R
-bind-key -T copy-mode-vi 'C-\' select-pane -l
 ```
 
 #### TPM
@@ -91,7 +85,7 @@ copying the snippet.
 When using TPM, add the following lines to your ~/.tmux.conf:
 
 ``` tmux
-set -g @plugin 'christoomey/vim-tmux-navigator'
+set -g @plugin 'afaikiac/vim-tmux-navigator'
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
@@ -119,7 +113,6 @@ noremap <silent> {Left-Mapping} :<C-U>TmuxNavigateLeft<cr>
 noremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
 noremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
 noremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
-noremap <silent> {Previous-Mapping} :<C-U>TmuxNavigatePrevious<cr>
 ```
 
 *Note* Each instance of `{Left-Mapping}` or `{Down-Mapping}` must be replaced
@@ -186,35 +179,6 @@ mapping.
 
 ### Additional Customization
 
-#### Restoring Clear Screen (C-l)
-
-The default key bindings include `<Ctrl-l>` which is the readline key binding
-for clearing the screen. The following binding can be added to your `~/.tmux.conf` file to provide an alternate mapping to `clear-screen`.
-
-``` tmux
-bind C-l send-keys 'C-l'
-```
-
-With this enabled you can use `<prefix> C-l` to clear the screen.
-
-Thanks to [Brian Hogan][] for the tip on how to re-map the clear screen binding.
-
-#### Restoring SIGQUIT (C-\\)
-
-The default key bindings also include `<Ctrl-\>` which is the default method of
-sending SIGQUIT to a foreground process. Similar to "Clear Screen" above, a key
-binding can be created to replicate SIGQUIT in the prefix table.
-
-``` tmux
-bind C-\\ send-keys 'C-\'
-```
-
-Alternatively, you can exclude the previous pane key binding from your `~/.tmux.conf`. If using TPM, the following line can be used to unbind the previous pane binding set by the plugin.
-
-``` tmux
-unbind -n C-\\
-```
-
 #### Disable Wrapping
 
 By default, if you tru to move past the edge of the screen, tmux/vim will
@@ -244,6 +208,7 @@ bind-key -T copy-mode-vi 'C-l' if-shell -F '#{pane_at_right}'  {} { select-pane 
 ```
 
 #### Nesting
+
 If you like to nest your tmux sessions, this plugin is not going to work
 properly. It probably never will, as it would require detecting when Tmux would
 wrap from one outermost pane to another and propagating that to the outer
@@ -270,7 +235,6 @@ bind -r C-h run "tmux select-pane -L"
 bind -r C-j run "tmux select-pane -D"
 bind -r C-k run "tmux select-pane -U"
 bind -r C-l run "tmux select-pane -R"
-bind -r C-\ run "tmux select-pane -l"
 ```
 
 Another workaround is to configure tmux on the outer machine to send keys to
@@ -347,7 +311,7 @@ S+   tmux
 If you encounter a different output please [open an issue][] with as much info
 about your OS, Vim version, and tmux version as possible.
 
-[open an issue]: https://github.com/christoomey/vim-tmux-navigator/issues/new
+[open an issue]: https://github.com/afaikiac/vim-tmux-navigator/issues/new
 
 ### Tmux Can't Tell if Vim Is Active
 
